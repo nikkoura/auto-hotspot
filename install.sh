@@ -1,6 +1,5 @@
 #!/bin/bash
 interfaceWifi=wlan0
-interfaceWired=eth0
 ipAddress=192.168.4.1/24
 
 ### Check if run as root ############################
@@ -18,13 +17,6 @@ systemctl enable systemd-networkd.service systemd-resolved.service
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 ## Install configuration files for systemd-networkd
-cat > /etc/systemd/network/04-${interfaceWired}.network <<-EOF
-	[Match]
-	Name=$interfaceWired
-	[Network]
-	DHCP=yes
-	IPForward=yes
-	EOF
 
 cat > /etc/systemd/network/08-${interfaceWifi}-CLI.network <<-EOF
 	[Match]
@@ -40,7 +32,7 @@ cat > /etc/systemd/network/12-${interfaceWifi}-AP.network <<-EOF
 	Address=$ipAddress
 	DHCPServer=yes
 	[DHCPServer]
-	DNS=84.200.69.80 84.200.70.40 1.1.1.1
+	DNS=1.1.1.1 8.8.8.8
 EOF
 
 cp $(pwd)/auto-hotspot /usr/local/sbin/
